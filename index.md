@@ -14,13 +14,7 @@
         * [集群访问](/uhadoop/guide/instance/client)
         * [元数据管理](/uhadoop/guide/instance/metadb)
         * [集群删除](/uhadoop/guide/instance/delete)
-    * 服务管理
-        * [服务列表](/uhadoop/guide/service/list)
-        * [组件管理](/uhadoop/guide/service/manage)
-        * [参数配置](/uhadoop/guide/service/config)
-        * [重启服务](/uhadoop/guide/service/restart)
-        * [开启服务](/uhadoop/guide/service/install)
-        * [关闭服务](/uhadoop/guide/service/shutdown)
+    * [服务管理](/uhadoop/guide/service/index)
     * [Yarn Application跟踪](/uhadoop/guide/application/index)
     * [Yarn 队列管理](/uhadoop/guide/queue/index)
     * 节点管理

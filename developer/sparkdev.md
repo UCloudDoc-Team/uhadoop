@@ -45,7 +45,7 @@ $SPARK_HOME/examples/src/main/python/pi.py 100
 ```
 
 更多关于提交任务的操作请参考：
-<https://spark.apache.org/docs/1.6.0/submitting-applications.html>
+<https://archive.apache.org/dist/spark/docs/3.3.0/submitting-applications.html>
 
 **在集群外部机器提交任务**
 

@@ -7,14 +7,10 @@ UHadoop GPU 计算节点是在 UHadoop CPU 架构产品能力基础上扩展的 
 
 ## 2. 使用限制
 
-1. Spark Rapids 支持了大部分 DQL 算子，当遇到不支持的算子时，Spark Rapids 会回退到原生算子。
-2. Spark Rapids 比较**适合** 高散列度的 join、sort、aggregation、window，以及 udf 中包含 cuda 计算、编码计算等场景，**不太适合** 用于小数据量、重 io（包括 shuffle）以及 udf 包含大量逻辑计算（与 cpu 频繁交互）的场景。
-3. Spark Rapids 算子与原生算子在某些场景下存在行为差异。详细信息可参考 [Spark Rapids 官方文档](https://nvidia.github.io/spark-rapids/docs/compatibility.html)。
-4. 目前 UHdoop 仅支持V100S机型（不支持 [Multi-Instance GPU](https://github.com/NVIDIA/spark-rapids-examples/tree/main/examples/MIG-Support)，Mig）。
-5. 当前仅支持 EXCLUSIVE_PROCESS 模式，即**一张卡只能服务于一个 executor** 。
-6. 已知以下的 GPU 集群风险，我们将在未来的版本逐步修复：
-   - 当前有GPU计算节点的集群仅支持Spark组件，提交其他组件任务可能会导致任务失败（如Hive、Flink、DolphinScheduler等）。
-   - GPU 实例目前尚不支持提交包含 Iceberg 格式的 Spark on GPU 任务。
+1. Spark Rapids 支持大部分常用 DQL 算子，但尚未实现全量覆盖。当遇到不支持的算子时，系统将自动回退至 Spark 原生 CPU 算子执行，以保证作业正确性。
+2. 部分 Spark Rapids 算子在计算行为上可能与 Spark 原生实现存在差异（如浮点数精度）。对结果一致性要求较高的场景，需提前验证，详细差异请参考[官方文档](https://nvidia.github.io/spark-rapids/docs/compatibility.html)。 
+3. 目前 UHadoop 仅支持V100S机型（不支持 [Multi-Instance GPU](https://github.com/NVIDIA/spark-rapids-examples/tree/main/examples/MIG-Support)，Mig）。
+4. 当前有GPU计算节点的集群仅支持Spark组件任务，提交其他组件任务可能会导致任务失败（如Hive、Flink、DolphinScheduler等）。
 
 
 ## 3. 创建集群

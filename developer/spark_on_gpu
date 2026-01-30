@@ -7,14 +7,15 @@ UHadoop GPU 计算节点是在 UHadoop CPU 架构产品能力基础上扩展的 
 
 ## 2. 使用限制
 
-1. Spark Rapids 支持了大部分 DQL 算子，但并没有完全支持。当遇到不支持的算子时，Spark Rapids 会回退到原生算子。
-2. Spark Rapids 比较**适合**高散列度的 join、aggregation、window、sort，以及 udf 包含 cuda 计算、编码计算等场景，**不太适合**用于小数据量、重 io（包括 shuffle）、GPU 卡内存比较小，以及 udf 包含大量逻辑计算（与 cpu 频繁交互）的场景。
-3. Spark Rapids 算子与原生算子之间存在一定程度的兼容性问题，比如浮点数的计算等。详细信息可参考 [Spark Rapids 官方文档](https://nvidia.github.io/spark-rapids/docs/compatibility.html)。
+1. Spark Rapids 支持了大部分 DQL 算子，当遇到不支持的算子时，Spark Rapids 会回退到原生算子。
+2. Spark Rapids 比较**适合** 高散列度的 join、sort、aggregation、window，以及 udf 中包含 cuda 计算、编码计算等场景，**不太适合** 用于小数据量、重 io（包括 shuffle）以及 udf 包含大量逻辑计算（与 cpu 频繁交互）的场景。
+3. Spark Rapids 算子与原生算子在某些场景下存在行为差异。详细信息可参考 [Spark Rapids 官方文档](https://nvidia.github.io/spark-rapids/docs/compatibility.html)。
 4. 目前 UHdoop 仅支持V100S机型（不支持 [Multi-Instance GPU](https://github.com/NVIDIA/spark-rapids-examples/tree/main/examples/MIG-Support)，Mig）。
-5. 对于不支持 Mig 的卡，无法做到一张物理卡虚拟多张卡，因此每个节点的 GPU 数就等同于物理卡数。这使得 Yarn 在调度的时候，一个节点只能有一个 container 拥有这张卡。所以，**一张卡只能服务于一个 executor**。但您依然可以启动一个大的 executor 通过配置多个 task（spark.rapids.sql.concurrentGpuTasks）来达到一个高并发度。
+5. 当前仅支持 EXCLUSIVE_PROCESS 模式，即**一张卡只能服务于一个 executor** 。
 6. 已知以下的 GPU 集群风险，我们将在未来的版本逐步修复：
    - 当前有GPU计算节点的集群仅支持Spark组件，提交其他组件任务可能会导致任务失败（如Hive、Flink、DolphinScheduler等）。
    - GPU 实例目前尚不支持提交包含 Iceberg 格式的 Spark on GPU 任务。
+
 
 ## 3. 创建集群
 
@@ -23,7 +24,7 @@ UHadoop GPU 计算节点是在 UHadoop CPU 架构产品能力基础上扩展的 
 - UHadoop GPU 计算节点需单独开通使用权限，请联系[技术支持](https://spt.ucloud.cn/)提交申请后再进行相关操作。
 
 注意事项
-> 当前 UHadoop GPU 计算节点仅在华北（北京2）可用区B、华北（乌兰察布）可用区A地域提供服务，支持 uhadoop 3.1 协议版本，暂时支持 Core&Task 节点类型使用。
+> 当前 UHadoop GPU 计算节点仅在华北（北京2）可用区B、华北（乌兰察布）可用区A地域提供服务，支持 uhadoop 3.1 版本，暂时支持 Task 节点类型使用。
 
 操作流程
 步骤一. 登录[UHadoop控制台](https://console.ucloud.cn/uhadoop/create)，选择“创建集群”。

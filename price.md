@@ -53,10 +53,10 @@ UHadoop产品包含的计费模式如下：
 
 |   地域      | 节点类型 | GPU型号 | 机型名称                  | CPU(核) | 内存(GB) | GPU规格  | 硬盘(GB) | 价格(元/月) |
 | ---------- | ------ | ----- | --------------------- | ------ | ------ | ------ | ------ | ------- |
-| 华北（北京2）  | Task&Core | V100S | g.hadoop.g7v1.2xlarge | 10     | 32     | 1×32GB | 50     | 5701    |
-| 华北（北京2）  | Task&Core | V100S | g.hadoop.g7v1.5xlarge | 20     | 64     | 2×32GB | 50     | 11387   |
-| 华北（乌兰察布） | Task&Core | V100S | g.hadoop.g7v1.2xlarge | 10     | 32     | 1×32GB | 50     | 5079    |
-| 华北（乌兰察布） | Task&Core | V100S | g.hadoop.g7v1.5xlarge | 20     | 64     | 2×32GB | 50     | 10143   |
+| 华北（北京2）  | Task | V100S | g.hadoop.g7v1.2xlarge | 10     | 32     | 1×32GB | 50     | 5701    |
+| 华北（北京2）  | Task | V100S | g.hadoop.g7v1.5xlarge | 20     | 64     | 2×32GB | 50     | 11387   |
+| 华北（乌兰察布） | Task | V100S | g.hadoop.g7v1.2xlarge | 10     | 32     | 1×32GB | 50     | 5079    |
+| 华北（乌兰察布） | Task | V100S | g.hadoop.g7v1.5xlarge | 20     | 64     | 2×32GB | 50     | 10143   |
 
 ### 2.2 存储
 

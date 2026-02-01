@@ -23,6 +23,7 @@ UHadoop GPU 计算节点是在 UHadoop CPU 架构产品能力基础上扩展的 
 > 当前 UHadoop GPU 计算节点仅在华北（北京2）可用区B、华北（乌兰察布）可用区A地域提供服务，支持 uhadoop 3.1 版本，暂时支持 Task 节点类型使用。
 
 操作流程
+
 步骤一. 登录[UHadoop控制台](https://console.ucloud.cn/uhadoop/create)，选择“创建集群”。
 
 步骤二. 选择目标地域，Hadoop 框架的 3.1 发行版本，按需选择节点类型及GPU机型，并“立即购买”。
@@ -34,7 +35,7 @@ UHadoop GPU 计算节点是在 UHadoop CPU 架构产品能力基础上扩展的 
 ## 4. 使用
 
 ### 4.1 启动任务 
-- 手动指定配置操作如下：
+手动指定配置操作如下：
 
   ```java
   spark-shell \

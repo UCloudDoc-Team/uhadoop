@@ -44,6 +44,7 @@
     * [Flink开发指南](/uhadoop/developer/flink)
     * [US3接入](/uhadoop/developer/us3)
     * [Spark on GPU 开发指南](/uhadoop/developer/spark_on_gpu)
+    * [StarRocks开发指南](/uhadoop/developer/starrocksdev)
 * [端口配置](/uhadoop/port)
 * FAQs
     * [故障排查](/uhadoop/user/troubleshooting)

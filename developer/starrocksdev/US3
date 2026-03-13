@@ -1,0 +1,44 @@
+## US3数据源
+
+这里是指iceberg表的元数据和data数据都存放在US3中，且hadoop中集成了US3数据源。就可以使用一下方法查询到存在US3中的IceBerg表。
+
+前提：
+
+1. 存储hadoop集群已按https://docs.ucloud.cn/uhadoop/developer/us3集成us3
+
+2. 参考Hive数据源的步骤1和步骤2配置StarRocks
+
+3. 在StarRocks中创建catalog
+
+   ```
+   CREATE EXTERNAL CATALOG iceberg_us3_catalog
+   PROPERTIES (
+       "type" = "iceberg",
+       "iceberg.catalog.type" = "hadoop", 
+       "iceberg.catalog.warehouse" = "us3://${s3-bucket}/warehouse" 
+   );
+   ```
+
+   + type：catalog类型
+   + iceberg.catalog.type：元数据管理类型
+   + 
+
+4. 在 StarRocks 中查询catalog中的数据
+
+   ```
+   mysql> select * from iceberg_us3_catalog.test.iceberg_test;
+   +------+--------------+------+
+   | id   | name         | age  |
+   +------+--------------+------+
+   |    1 | Zhang San    |   25 |
+   |    2 | Li Si        |   30 |
+   |    3 | Wang Wu      |   28 |
+   |    4 | Zhao Liu     |   35 |
+   |    5 | Qian Qi      |   22 |
+   |    6 | Sun Ba       |   27 |
+   |    7 | Zhou Jiu     |   31 |
+   |    8 | Wu Shi       |   29 |
+   |    9 | Zheng Shi Yi |   26 |
+   |   10 | Wang Shi Er  |   33 |
+   +------+--------------+------+
+   ```

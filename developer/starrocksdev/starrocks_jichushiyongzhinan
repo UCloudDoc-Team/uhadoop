@@ -1,0 +1,65 @@
+# 基础使用指南
+
+### 前提
+
+已通过Ucloud控制台创建StarRocks集群。
+
+### 使用示例
+
+1. SSH登录StarRocks的Master节点。
+
+2. 通过mysql命令连接StarRocks集群。
+
+   ```
+   mysql -uroot -h127.0.0.1 -P 9030 -p
+   ```
+
+   + 密码是创建实例时设置的密码
+
+3. 执行以下SQL，创建数据库并选择数据库
+
+   ```
+   CREATE DATABASE IF NOT EXISTS test;
+   USE test;
+   ```
+
+4. 执行以下SQL，创建表
+
+   ```
+   CREATE TABLE `user_events` (
+       `event_id` BIGINT,
+       `event_time` DATETIME,
+       `user_id` INT,
+       `event_type` VARCHAR(50),
+       `amount` DECIMAL(10, 2),
+       `updated_at` DATETIME
+   )
+   PRIMARY KEY (`event_id`, `event_time`)
+   PARTITION BY RANGE (`event_time`) (
+       PARTITION p202601 VALUES [('2026-01-01'), ('2026-02-01')),
+       PARTITION p202602 VALUES [('2026-02-01'), ('2026-03-01')),
+       PARTITION p202603 VALUES [('2026-03-01'), ('2026-04-01'))
+   )
+   DISTRIBUTED BY HASH(`event_id`) BUCKETS 8
+   PROPERTIES (
+       "replication_num" = "3",
+       "enable_persistent_index" = "true"
+   );
+   ```
+
+5. 执行以下sql插入数据
+
+   ```
+   INSERT INTO `user_events` VALUES
+   (1001, '2026-03-05 10:30:00', 501, 'purchase', 99.90, '2026-03-05 10:30:00'),
+   (1002, '2026-03-05 11:15:00', 502, 'refund', 49.50, '2026-03-05 11:15:00'),
+   (1003, '2026-02-18 09:00:00', 501, 'purchase', 199.00, '2026-02-18 09:00:00'),
+   (1004, '2026-01-10 08:00:00', 503, 'login', 0.00, '2026-01-10 08:00:00'),
+   (1005, '2026-03-05 14:20:00', 504, 'purchase', 59.90, '2026-03-05 14:20:00');
+   ```
+
+6. 执行以下sql查询数据
+
+   ```
+   select * from user_events;
+   ```

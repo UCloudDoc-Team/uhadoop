@@ -49,7 +49,7 @@
         * [基础使用指南](/developer/starrocksdev/starrocks_jichushiyongzhinan)
         * 数据导入
             * [Broker Load](/developer/starrocksdev/brokerload)   
-            * [Strem Load](/developer/starrocksdev/streamload)
+            * [Stream Load](/developer/starrocksdev/streamload)
             * [Spark Connector](/developer/starrocksdev/sparkconnector)    
             * [Kafka Connector](/developer/starrocksdev/kafkaconnector)   
             * [Flink Connector](/developer/starrocksdev/flinkconnector) 

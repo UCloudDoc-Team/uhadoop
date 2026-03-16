@@ -14,10 +14,10 @@
 
   应用场景有存算一体和存算分离两种可选：存算一体架构采用 BE 节点进行部署，数据将会存储在云盘中，同时可以增加 CN 节点辅助计算；存算分离架构采用 CN 节点进行部署，数据将会存储在另一 HDFS 集群或US3中。
 
-![](/images/developer/starrocksdev/starrocks_create31.png)
+![](/images/developer/starrocksdev/starrocks_create031.png)
 
 当选择存算分离时，需要选择集群存储位置，可选择HDFS集群或US3两种方式，
-![](/images/developer/starrocksdev/starrocks_create32.png)
+![](/images/developer/starrocksdev/starrocks_create032.png)
 
 4、配置节点参数
 

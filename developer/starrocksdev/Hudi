@@ -4,7 +4,7 @@
 
 1. mysql登录StarRocks集群
 
-2. 创建创建iceberg类型的catalog
+2. 创建iceberg类型的catalog
 
    ```
    CREATE EXTERNAL CATALOG hudi_catalog_hms

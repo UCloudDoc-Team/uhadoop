@@ -1,6 +1,6 @@
 ## US3数据源
 
-这里是指iceberg表的元数据和data数据都存放在US3中，且hadoop中集成了US3数据源。就可以使用一下方法查询到存在US3中的IceBerg表。
+这里是指iceberg表的元数据和data数据都存放在US3中，且hadoop中集成了US3数据源。就可以使用以下方法查询到存在US3中的IceBerg表。
 
 前提：
 

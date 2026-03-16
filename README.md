@@ -60,7 +60,7 @@
             * [Iceberg 数据源](/developer/starrocksdev/Iceberg)
             * [Hudi 数据源](/developer/starrocksdev/Hudi)    
             * [US3 数据源](/developer/starrocksdev/US3)   
-            * [內表数据源](/developer/starrocksdev/neibiao)
+            * [內表数据源](/developer/starrocksdev/default_catalog)
 * [端口配置](/uhadoop/port)
 * FAQs
     * [故障排查](/uhadoop/user/troubleshooting)

@@ -35,17 +35,23 @@
        `updated_at` DATETIME
    )
    PRIMARY KEY (`event_id`, `event_time`)
-   PARTITION BY RANGE (`event_time`) (
-       PARTITION p202601 VALUES [('2026-01-01'), ('2026-02-01')),
-       PARTITION p202602 VALUES [('2026-02-01'), ('2026-03-01')),
-       PARTITION p202603 VALUES [('2026-03-01'), ('2026-04-01'))
-   )
-   DISTRIBUTED BY HASH(`event_id`) BUCKETS 8
+   PARTITION BY RANGE (`event_time`) ()
+   DISTRIBUTED BY HASH(`event_id`)
    PROPERTIES (
        "replication_num" = "3",
-       "enable_persistent_index" = "true"
+       "enable_persistent_index" = "true",
+       "dynamic_partition.enable" = "true",
+       "dynamic_partition.time_unit" = "MONTH",
+       "dynamic_partition.end" = "3",
+       "dynamic_partition.prefix" = "p"
    );
    ```
+
+   + enable_persistent_index：开启持久化主键索引。
+   + dynamic_partition.enable：开启动态分区功能，由后台调度器自动创建和删除分区
+   + dynamic_partition.time_unit：分区的时间粒度为月。可选值：`HOUR`、`DAY`、`WEEK`、`MONTH`、`YEAR`
+   + dynamic_partition.end：提前创建未来分区的范围
+   + dynamic_partition.prefix：自动创建的分区名前缀
 
 5. 执行以下sql插入数据
 
@@ -53,13 +59,19 @@
    INSERT INTO `user_events` VALUES
    (1001, '2026-03-05 10:30:00', 501, 'purchase', 99.90, '2026-03-05 10:30:00'),
    (1002, '2026-03-05 11:15:00', 502, 'refund', 49.50, '2026-03-05 11:15:00'),
-   (1003, '2026-02-18 09:00:00', 501, 'purchase', 199.00, '2026-02-18 09:00:00'),
-   (1004, '2026-01-10 08:00:00', 503, 'login', 0.00, '2026-01-10 08:00:00'),
    (1005, '2026-03-05 14:20:00', 504, 'purchase', 59.90, '2026-03-05 14:20:00');
    ```
 
 6. 执行以下sql查询数据
 
    ```
-   select * from user_events;
+   mysql> select * from user_events;
+   +----------+---------------------+---------+------------+--------+---------------------+
+   | event_id | event_time          | user_id | event_type | amount | updated_at          |
+   +----------+---------------------+---------+------------+--------+---------------------+
+   |     1002 | 2026-03-05 11:15:00 |     502 | refund     |  49.50 | 2026-03-05 11:15:00 |
+   |     1001 | 2026-03-05 10:30:00 |     501 | purchase   |  99.90 | 2026-03-05 10:30:00 |
+   |     1005 | 2026-03-05 14:20:00 |     504 | purchase   |  59.90 | 2026-03-05 14:20:00 |
+   +----------+---------------------+---------+------------+--------+---------------------+
+   3 rows in set (0.02 sec)
    ```

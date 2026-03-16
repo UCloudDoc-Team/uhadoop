@@ -5,7 +5,7 @@ StarRocks 是优刻得（UCloud）在UHadoop体系内推出的实时分析托管
 
 从数据实时接入、实时计算与存储，到即时查询分析、报表可视化，StarRocks提供端到端实时分析流水线，支持Kafka、Flink、数据湖等多种数据源，并可对接主流BI工具，完整覆盖企业实时数仓建设全流程。
 
-<img src="/images/developer/starrocksdev/starrocks_diagram.png" width="600">
+![](/images/developer/starrocksdev/starrocks_diagram.png)
 
 
 

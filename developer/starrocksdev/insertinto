@@ -2,7 +2,7 @@
 
 1. 使用mysql命令登录StarRocks集群
 
-2. 使用Insert Into将其他catalog数据插入到默认catlog
+2. 使用Insert Into将其他catalog数据插入到默认catalog
 
    ```
    INSERT INTO test.test_table SELECT * from source_catalog.test.source_test_table;

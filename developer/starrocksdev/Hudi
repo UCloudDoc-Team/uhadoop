@@ -20,7 +20,7 @@
    + iceberg.catalog.type：catalog元数据管理类型
    + hive.metastore.uris：hive hms地址
 
-3. 在StarRocks中查询Iceberg表数据
+3. 在StarRocks中查询Hudi表数据
 
    ```
    mysql> set catalog hudi_catalog_hms;

@@ -35,23 +35,16 @@
        `updated_at` DATETIME
    )
    PRIMARY KEY (`event_id`, `event_time`)
-   PARTITION BY RANGE (`event_time`) ()
+   PARTITION BY date_trunc('month', event_time)
    DISTRIBUTED BY HASH(`event_id`)
    PROPERTIES (
        "replication_num" = "3",
-       "enable_persistent_index" = "true",
-       "dynamic_partition.enable" = "true",
-       "dynamic_partition.time_unit" = "MONTH",
-       "dynamic_partition.end" = "3",
-       "dynamic_partition.prefix" = "p"
+       "enable_persistent_index" = "true"
    );
    ```
 
    + enable_persistent_index：开启持久化主键索引。
-   + dynamic_partition.enable：开启动态分区功能，由后台调度器自动创建和删除分区
-   + dynamic_partition.time_unit：分区的时间粒度为月。可选值：`HOUR`、`DAY`、`WEEK`、`MONTH`、`YEAR`
-   + dynamic_partition.end：提前创建未来分区的范围
-   + dynamic_partition.prefix：自动创建的分区名前缀
+   + replication_num：数据副本数
 
 5. 执行以下sql插入数据
 
@@ -61,7 +54,7 @@
    (1002, '2026-03-05 11:15:00', 502, 'refund', 49.50, '2026-03-05 11:15:00'),
    (1005, '2026-03-05 14:20:00', 504, 'purchase', 59.90, '2026-03-05 14:20:00');
    ```
-
+   
 6. 执行以下sql查询数据
 
    ```

@@ -1,0 +1,70 @@
+# 基础使用指南
+
+### 前提
+
+已通过Ucloud控制台创建StarRocks集群。
+
+### 使用示例
+
+1. SSH登录StarRocks的Master节点。
+
+2. 通过mysql命令连接StarRocks集群。
+
+   ```
+   mysql -uroot -h127.0.0.1 -P 9030 -p
+   ```
+
+   + 密码是创建实例时设置的密码
+
+3. 执行以下SQL，创建数据库并选择数据库
+
+   ```
+   CREATE DATABASE IF NOT EXISTS test;
+   USE test;
+   ```
+
+4. 执行以下SQL，创建表
+
+   ```
+   CREATE TABLE `user_events` (
+       `event_id` BIGINT,
+       `event_time` DATETIME,
+       `user_id` INT,
+       `event_type` VARCHAR(50),
+       `amount` DECIMAL(10, 2),
+       `updated_at` DATETIME
+   )
+   PRIMARY KEY (`event_id`, `event_time`)
+   PARTITION BY date_trunc('month', event_time)
+   DISTRIBUTED BY HASH(`event_id`)
+   PROPERTIES (
+       "replication_num" = "3",
+       "enable_persistent_index" = "true"
+   );
+   ```
+
+   + enable_persistent_index：开启持久化主键索引。
+   + replication_num：数据副本数
+
+5. 执行以下sql插入数据
+
+   ```
+   INSERT INTO `user_events` VALUES
+   (1001, '2026-03-05 10:30:00', 501, 'purchase', 99.90, '2026-03-05 10:30:00'),
+   (1002, '2026-03-05 11:15:00', 502, 'refund', 49.50, '2026-03-05 11:15:00'),
+   (1005, '2026-03-05 14:20:00', 504, 'purchase', 59.90, '2026-03-05 14:20:00');
+   ```
+   
+6. 执行以下sql查询数据
+
+   ```
+   mysql> select * from user_events;
+   +----------+---------------------+---------+------------+--------+---------------------+
+   | event_id | event_time          | user_id | event_type | amount | updated_at          |
+   +----------+---------------------+---------+------------+--------+---------------------+
+   |     1002 | 2026-03-05 11:15:00 |     502 | refund     |  49.50 | 2026-03-05 11:15:00 |
+   |     1001 | 2026-03-05 10:30:00 |     501 | purchase   |  99.90 | 2026-03-05 10:30:00 |
+   |     1005 | 2026-03-05 14:20:00 |     504 | purchase   |  59.90 | 2026-03-05 14:20:00 |
+   +----------+---------------------+---------+------------+--------+---------------------+
+   3 rows in set (0.02 sec)
+   ```

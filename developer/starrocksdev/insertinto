@@ -1,0 +1,12 @@
+## Insert Into
+
+1. 使用mysql命令登录StarRocks集群
+
+2. 使用Insert Into将其他catalog数据插入到默认catalog
+
+   ```
+   INSERT INTO test.test_table SELECT * from source_catalog.test.source_test_table;
+   ```
+
+   + 将source_catalog catalog中的test库的source_test_table表数据插入到default_catalog的test库的test_table
+   + mysql连接starrocks之后默认就是default_catalog

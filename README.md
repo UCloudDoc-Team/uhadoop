@@ -42,8 +42,25 @@
     * [Phoenix开发指南](/uhadoop/developer/phoenixdev)
     * [Zeppelin开发指南](/uhadoop/developer/zeppelindev)
     * [Flink开发指南](/uhadoop/developer/flink)
-    * [US3接入](/uhadoop/developer/us3)
-    * [Spark on GPU 开发指南](/uhadoop/developer/spark_on_gpu)
+    * [US3接入指南](/uhadoop/developer/us3)
+    * [Spark on GPU开发指南](/uhadoop/developer/spark_on_gpu)
+    * StarRocks开发指南
+        * [产品简介](/developer/starrocksdev/starrocks_introduce.md)   
+        * [如何创建](/developer/starrocksdev/starrocks_create)
+        * [基础使用指南](/developer/starrocksdev/starrocks_guide)
+        * 数据导入
+            * [Broker Load](/developer/starrocksdev/brokerload)   
+            * [Stream Load](/developer/starrocksdev/streamload)
+            * [Spark Connector](/developer/starrocksdev/sparkconnector)    
+            * [Kafka Connector](/developer/starrocksdev/kafkaconnector)   
+            * [Flink Connector](/developer/starrocksdev/flinkconnector) 
+            * [Insert Into](/developer/starrocksdev/insertinto)
+        * 数据分析
+            * [Hive 数据源](/developer/starrocksdev/hive)   
+            * [Iceberg 数据源](/developer/starrocksdev/iceberg)
+            * [Hudi 数据源](/developer/starrocksdev/hudi)    
+            * [US3 数据源](/developer/starrocksdev/us3)   
+            * [內表数据源](/developer/starrocksdev/default_catalog)
 * [端口配置](/uhadoop/port)
 * FAQs
     * [故障排查](/uhadoop/user/troubleshooting)

@@ -1,0 +1,41 @@
+## Hudi数据源
+
+查询hive管理的hudi表
+
+1. mysql登录StarRocks集群
+
+2. 创建iceberg类型的catalog
+
+   ```
+   CREATE EXTERNAL CATALOG hudi_catalog_hms
+   PROPERTIES
+   (
+       "type" = "hudi",
+       "hive.metastore.type" = "hive",
+       "hive.metastore.uris" = "thrift://xx.xx.xx.xx:9083"
+   );
+   ```
+
+   + type：catalog类型是iceberg
+   + iceberg.catalog.type：catalog元数据管理类型
+   + hive.metastore.uris：hive hms地址
+
+3. 在StarRocks中查询Hudi表数据
+
+   ```
+   mysql> set catalog hudi_catalog_hms;
+   mysql> use default;
+   mysql> select _hoodie_record_key,_hoodie_partition_path,ts from hudi_table_spark;
+   +-----------------------+------------------------+---------------+
+   | _hoodie_record_key    | _hoodie_partition_path | ts            |
+   +-----------------------+------------------------+---------------+
+   | 20260313112935347_4_0 | city=sao_paulo         | 1695516137016 |
+   | 20260313112935347_5_0 | city=sao_paulo         | 1695376420876 |
+   | 20260313112935347_1_0 | city=san_francisco     | 1695091554788 |
+   | 20260313112935347_3_0 | city=san_francisco     | 1695332066204 |
+   | 20260313112935347_0_0 | city=san_francisco     | 1695159649087 |
+   | 20260313112935347_2_0 | city=san_francisco     | 1695046462179 |
+   | 20260313112935347_7_0 | city=chennai           | 1695115999911 |
+   | 20260313112935347_6_0 | city=chennai           | 1695173887231 |
+   +-----------------------+------------------------+---------------+
+   8 rows in set (0.09 sec)

@@ -1,0 +1,77 @@
+## Hive 数据源
+
+1. 将hadoop的 `hdfs-site.xml、core-site.xml` 这两个文件放到每个节点的 /home/starrocks/starrocks/fe/conf 和 /home/starrocks/starrocks/be/conf 目录下
+
+2. 在starrocks的/home/starrocks/starrocks/fe/conf 和 /home/starrocks/starrocks/be/conf 下的 hadoop_env.sh`文件开头添加`
+
+   ```
+   export HADOOP_USER_NAME="hadoop"
+   ```
+
+3. 在 fe、be 节点上把 hadoop 集群所有节点的 ip/hostname 配置到`/etc/hosts` 文件中
+
+4. 重启fe节点和be或cn节点
+
+   ```
+   service starrocks-fe restart
+   
+   service starrocks-be restart
+   
+   service starrocks-cn restart
+   ```
+
+5. 使用mysql命令登录StarRocks集群，执行以下命令创建Hive类型的catalog
+
+   ```
+   CREATE EXTERNAL CATALOG hive_catalog
+   PROPERTIES (
+       "type" = "hive",
+       "hive.metastore.type" = "hive",
+       "hive.metastore.uris" = "thrift://xxx:9083,thrift://xxx:9083"
+   );
+   ```
+
+   - type：catalog类型
+   - hive.metastore.type：元数据管理类型
+   - hive.metastore.uris：hive hms地址
+
+6. 在StarRocks中查询Hive中的数据
+
+   切换catalog到hive_catalog
+
+   ```
+   set catalog hive_catalog;
+   ```
+
+   查询Hive test库下的test_table表
+
+   ```
+   SELECT * FROM test.test_table;
+   ```
+
+   或者使用完整路径
+
+   ```
+   SELECT * FROM hive_catalog.test.test_table;
+   ```
+
+   结果
+
+   ```
+   mysql> SELECT * FROM hive_catalog.test.test_table;
+   +------+--------------+------+
+   | id   | name         | age  |
+   +------+--------------+------+
+   |    1 | Zhang San    |   25 |
+   |    2 | Li Si        |   30 |
+   |    3 | Wang Wu      |   28 |
+   |    4 | Zhao Liu     |   35 |
+   |    5 | Qian Qi      |   22 |
+   |    6 | Sun Ba       |   27 |
+   |    7 | Zhou Jiu     |   31 |
+   |    8 | Wu Shi       |   29 |
+   |    9 | Zheng Shi Yi |   26 |
+   |   10 | Wang Shi Er  |   33 |
+   +------+--------------+------+
+   10 rows in set (0.03 sec)
+   ```

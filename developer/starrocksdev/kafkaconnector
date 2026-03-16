@@ -1,0 +1,83 @@
+## Kafka connector
+
+1. 前提：已经存在一个kafka集群。
+
+2. 创建topic并写入测试数据
+
+   ```
+   # 创建 Topic
+   bin/kafka-topics.sh --create --topic test --bootstrap-server localhost:9092
+   
+   # 写入测试数据
+   bin/kafka-console-producer.sh --topic test --bootstrap-server localhost:9092
+   {"id":1,"city":"New York"}
+   {"id":2,"city":"Los Angeles"}
+   {"id":3,"city":"Chicago"}
+   ```
+
+3. 下载connector。下载地址：https://github.com/StarRocks/starrocks-connector-for-kafka/releases
+
+4. 使用mysql连接StarRocks，并建表
+
+   ```sql
+   CREATE DATABASE example_db;
+   USE example_db;
+   CREATE TABLE test_tbl (id INT, city STRING);
+   ```
+
+3. 配置Kafka Connector。在 Kafka 的 `config` 目录下创建 `connect-starrocks-sink.properties`
+
+   ```
+   name=starrocks-kafka-connector
+   connector.class=com.starrocks.connector.kafka.StarRocksSinkConnector
+   topics=test
+   key.converter=org.apache.kafka.connect.json.JsonConverter
+   value.converter=org.apache.kafka.connect.json.JsonConverter
+   key.converter.schemas.enable=true
+   value.converter.schemas.enable=false
+   # StarRocks FE 的 HTTP 地址
+   starrocks.http.url=<starrocks_fe_ip>:8030
+   # Topic 名称与 StarRocks 表名不一致时需要配置映射
+   starrocks.topic2table.map=test:test_tbl
+   starrocks.username=root
+   starrocks.password=
+   starrocks.database.name=example_db
+   sink.properties.strip_outer_array=true
+   ```
+
+4. 配置Kafka Connect。编辑 `config/connect-standalone.properties`
+
+   ```
+   bootstrap.servers=localhost:9092
+   offset.storage.file.filename=/tmp/connect.offsets
+   offset.flush.interval.ms=10000
+   key.converter=org.apache.kafka.connect.json.JsonConverter
+   value.converter=org.apache.kafka.connect.json.JsonConverter
+   key.converter.schemas.enable=true
+   value.converter.schemas.enable=false
+   # connector 解压后的路径
+   plugin.path=/home/kafka-connect/starrocks-kafka-connector-1.0.4
+   ```
+
+5. 启动Kafka Connect
+
+   ```
+   cd kafka
+   CLASSPATH=/home/kafka-connect/starrocks-kafka-connector-1.0.4/* \
+     bin/connect-standalone.sh \
+     config/connect-standalone.properties \
+     config/connect-starrocks-sink.properties
+   ```
+
+6. 验证数据
+
+   ```
+   mysql> SELECT * FROM example_db.test_tbl;
+   +------+-------------+
+   | id   | city        |
+   +------+-------------+
+   |    1 | New York    |
+   |    2 | Los Angeles |
+   |    3 | Chicago     |
+   +------+-------------+
+   ```

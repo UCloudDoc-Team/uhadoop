@@ -4,7 +4,7 @@
 
 前提：
 
-1. 存储hadoop集群已按https://docs.ucloud.cn/uhadoop/developer/us3集成us3
+1. 存储hadoop集群已按https://docs.ucloud.cn/uhadoop/developer/us3
 
 2. 参考Hive数据源的步骤1和步骤2配置StarRocks
 

@@ -13,6 +13,10 @@ UHadoop 需提供 Task 节点弹性伸缩功能，即能在业务高峰期自动
 
 开通时需配置自动伸缩的最小值与最大值，即伸缩节点数量范围。
 
+![guide_instance_create_config_basic](../../images/auto_scaling/12.png)
+
+开通后可执行“关闭功能”、修改节点数范围、开关是否启用等操作。
+
 ## 设置自动伸缩节点规格
 
 ![guide_instance_create_config_basic](../../images/auto_scaling/03.png)

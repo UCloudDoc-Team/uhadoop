@@ -67,4 +67,3 @@ UHadoop 提供 Task 节点弹性伸缩功能，即能在业务高峰期自动完
 ![guide_instance_create_config_basic](../../images/auto_scaling/10.png)
 
 在节点列表中，自动扩容的节点，角色后方会以“弹”标签来展示。
-

@@ -31,7 +31,6 @@
     * [Sentry使用指南](/uhadoop/developer/sentrydev)
     * [HBase开发指南](/uhadoop/developer/hbasedev)
     * [Spark开发指南](/uhadoop/developer/sparkdev)
-    * [Pig开发指南](/uhadoop/developer/pigdev)
     * [Hue开发指南](/uhadoop/developer/huedev)
     * [Sqoop开发指南](/uhadoop/developer/sqoopdev)
     * [Sqoop2开发指南](/uhadoop/developer/sqoop2dev)

@@ -61,6 +61,8 @@
             * [Hudi 数据源](/uhadoop/developer/starrocksdev/hudi.md)
             * [US3 数据源](/uhadoop/developer/starrocksdev/us3.md)
             * [內表数据源](/uhadoop/developer/starrocksdev/default_catalog.md)
+        * 迁移方案
+            * [OpenSearch to StarRocks](/uhadoop/developer/starrocksdev/openSearch_to_sr.md)
 * [端口配置](/uhadoop/port)
 * FAQs
     * [故障排查](/uhadoop/user/troubleshooting)

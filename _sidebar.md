@@ -13,6 +13,7 @@
         * [集群访问](/uhadoop/guide/instance/client)
         * [元数据管理](/uhadoop/guide/instance/metadb)
         * [集群删除](/uhadoop/guide/instance/delete)
+        * [多可用区部署](/uhadoop/guide/instance/cross_zone)
     * [服务管理](/uhadoop/guide/service/index)
     * [Yarn Application跟踪](/uhadoop/guide/application/index)
     * [Yarn 队列管理](/uhadoop/guide/queue/index)

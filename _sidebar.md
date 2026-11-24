@@ -42,6 +42,7 @@
     * [Phoenix开发指南](/uhadoop/developer/phoenixdev)
     * [Zeppelin开发指南](/uhadoop/developer/zeppelindev)
     * [Flink开发指南](/uhadoop/developer/flink)
+    * [StreamPark开发指南](/uhadoop/developer/streampark)
     * [US3接入指南](/uhadoop/developer/us3)
     * [Spark on GPU开发指南](/uhadoop/developer/spark_on_gpu)
     * StarRocks开发指南
@@ -72,6 +73,7 @@
     * [HBase](/uhadoop/user/hbase)
     * [Hue](/uhadoop/user/hue)
     * [Spark](/uhadoop/user/spark)
+    * [Flink](/uhadoop/user/flink)
     * [Python](/uhadoop/user/python)
     * [常见任务ERROR](/uhadoop/user/error)
 * [产品价格](/uhadoop/price)

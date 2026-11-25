@@ -4,7 +4,7 @@
 
 **Apache StreamPark** 是一个流处理应用开发管理平台，提供 Web 控制台，可用于 Flink 作业的开发、编译、部署、启停和监控。详细见 [Apache StreamPark](https://streampark.apache.org/)。
 
-UHadoop 中的 StreamPark 版本为 2.1.5，与 Flink 配合使用，作业以 Flink On Yarn 方式运行。
+UHadoop 中的 StreamPark 与 Flink 配合使用，作业以 Flink On Yarn 方式运行。
 
 ## 2. 服务说明
 
@@ -16,9 +16,9 @@ UHadoop 中的 StreamPark 版本为 2.1.5，与 Flink 配合使用，作业以 F
 | 本地工作空间 | `/data/streampark/workspace`，用于存放项目代码和编译产物     |
 | HDFS 工作空间 | `hdfs://Ucluster/streampark/`，用于存放作业依赖的 JAR 包     |
 | 日志目录     | `/var/log/streampark`                                        |
-| 元数据存储   | MySQL，库名 `streampark`，随集群自动创建并初始化             |
-| 运行用户     | `hadoop`                                                     |
-| 初始用户     | 用户名 `admin`，密码为集群密码                               |
+| 运行节点     | master1                                                      |
+| 运行用户     | `hadoop`：StreamPark 服务进程以 `hadoop` 用户运行；提交到 Yarn 的作业也使用该用户（对应配置 `streampark.hadoop-user-name`），访问 HDFS 时使用 `hadoop` 用户的权限 |
+| 登录用户     | 用户名 `admin`，密码为集群密码                               |
 
 说明：
 
@@ -27,17 +27,20 @@ UHadoop 中的 StreamPark 版本为 2.1.5，与 Flink 配合使用，作业以 F
 
 ## 3. 服务管理
 
-可通过以下命令管理 StreamPark 服务：
+可在 master1 节点使用 `service` 命令管理 StreamPark 服务：
 
 ```
 # 启动
-sh /home/hadoop/streampark/bin/streampark.sh start
+service StreamParkServer start
 
 # 停止
-sh /home/hadoop/streampark/bin/streampark.sh stop
+service StreamParkServer stop
+
+# 重启
+service StreamParkServer restart
 
 # 状态检查
-sh /home/hadoop/streampark/bin/streampark.sh status
+service StreamParkServer status
 ```
 
 说明：请使用 `hadoop` 用户执行以上命令。
@@ -46,7 +49,7 @@ sh /home/hadoop/streampark/bin/streampark.sh status
 
 ### 4.1 登录控制台
 
-访问 `http://<StreamPark所在节点>:11000`，使用初始用户 `admin` 登录，密码为集群密码。
+StreamPark 运行在 master1 节点，访问 `http://uhadoop-xxxxxxx-master1:11000`，使用 `admin` 用户登录，密码为集群密码。
 
 登录后，在左侧菜单依次选择 **Apache Flink** > **Application**（应用）进入应用列表，列表中展示作业名称、Flink 版本、运行状态（Status）和发布状态（Release）等信息，页面顶部展示运行中作业数、内存等集群概览。
 
@@ -58,17 +61,16 @@ sh /home/hadoop/streampark/bin/streampark.sh status
 
 两种场景共用的说明：
 
-* **Deploy Mode**（部署模式）请选择 **yarn application**。**yarn per-job** 在界面中已标注为废弃（deprecated），其余模式（standalone、yarn session、k8s session、k8s application）需要额外的集群环境，不在本文范围内。
-* **Flink Version**（Flink 版本）选择已注册的版本，当前可选 `flink-1.18.1`。
+* **Deploy Mode**（部署模式）推荐使用 **yarn application**。
 * **Job Name**（作业名称）仅支持中英文、`-` 和 `_`，且不能出现连续两个空格。
-* 如需后续从 Checkpoint 恢复作业，请在 **Dynamic Properties**（动态参数）中开启 Checkpoint，并设置作业取消后保留 Checkpoint，例如：
+* 建议在 **Dynamic Properties**（动态参数）中配置以下参数，开启 Checkpoint 并在作业取消后保留，以便后续从 Checkpoint 恢复作业：
 
   ```
   -Dexecution.checkpointing.interval=60s -Dexecution.checkpointing.externalized-checkpoint-retention=RETAIN_ON_CANCELLATION
   ```
 
   Checkpoint 默认保存在 `hdfs://Ucluster/flink/flink-checkpoints/<jobId>/chk-<n>`，无需额外配置目录。
-* 其余选项均为可选项，常用的有：Parallelism（并行度）、Task Slots（每个 TaskManager 的 Slot 数）、Fault Restart Size（故障重启次数）、JM/TM Memory Options（内存）、Yarn Queue（Yarn 队列）和 Dynamic Properties（动态参数，格式同 Flink 的 `-D` 参数）。
+
 
 #### 4.2.1 Flink SQL 作业
 
@@ -100,7 +102,7 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
 6. 如作业依赖额外的类库，可在 **Dependency** 中通过 **Maven pom** 或 **Upload Jar** 添加；作业所需的启动参数可填写在 **Program Args** 中。
 7. 填写 Job Name，点击页面底部的 **Submit**（提交）。
 
-以下示例上传 Flink 官方示例包 `flink-examples-streaming-1.18.1.jar`（可从 Maven Central 下载，坐标为 `org.apache.flink:flink-examples-streaming:1.18.1`），主类使用 `org.apache.flink.streaming.examples.wordcount.WordCount`：
+以下示例上传 Flink 官方示例包 [flink-examples-streaming-1.18.1.jar](https://repo1.maven.org/maven2/org/apache/flink/flink-examples-streaming/1.18.1/flink-examples-streaming-1.18.1.jar)，主类使用 `org.apache.flink.streaming.examples.wordcount.WordCount`：
 
 ![](/images/streampark_customcode_add_filled.png)
 
@@ -173,10 +175,8 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
 
   | 配置项          | 说明                                                         |
   | --------------- | ------------------------------------------------------------ |
-  | Savepoint path  | 选填，Savepoint 的保存路径                                   |
+  | Savepoint path  | 选填，Savepoint 保存在默认路径 `hdfs://Ucluster/streampark/savepoints/` 下，形如 `savepoint-xxxxxx-xxxxxxxxxxxx` |
   | Drain           | 开启后，在触发 Savepoint 并停止作业前，先发送 `MAX_WATERMARK`，使窗口等算子输出剩余数据 |
-
-  说明：Savepoint 默认保存在 `hdfs://Ucluster/streampark/savepoints/` 目录下，形如 `savepoint-xxxxxx-xxxxxxxxxxxx`，可在 HDFS 上查看。
 
 ## 5. 常用配置
 

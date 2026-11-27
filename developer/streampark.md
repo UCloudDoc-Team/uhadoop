@@ -71,18 +71,17 @@ StreamPark 提交作业时使用的 Flink 由 **Flink Home**（Flink 环境）�
 
 ### 5.1 确认 Flink 安装目录
 
-在 master1 节点使用 `hadoop` 用户确认 Flink 已安装。UHadoop 将 Flink 安装在 `/home/hadoop/.versions/flink-<version>`，同时 `/home/hadoop/flink` 软链接指向当前安装的版本：
+在 master1 节点使用 `hadoop` 用户确认 Flink 已安装。UHadoop 将 Flink 安装在 `/home/hadoop/flink`目录：
 
 ```
-ls -d /home/hadoop/.versions/flink-*
-/home/hadoop/.versions/flink-<version>/bin/flink -v
+ls -d /home/hadoop/flink
+/home/hadoop/flink/bin/flink -v
 ```
 
 说明：
 
 * `<version>` 为 Flink 版本号，例如 `1.18.1`、`1.20.5`。
-* 添加时请填写带版本号的目录（如 `/home/hadoop/.versions/flink-1.20.5`），不要使用 `/home/hadoop/flink` 软链接，避免之后切换版本时影响已有作业。
-* master1 上没有该目录时，说明 Flink 未部署到 StreamPark 所在节点，需要先在该节点部署 Flink。
+* master1 上没有该目录时，说明 Flink 未部署到 StreamPark 所在节点，需要先在在控制台安装Flink组件或自行部署 Flink。
 
 ### 5.2 在 StreamPark 中添加
 
@@ -94,8 +93,8 @@ ls -d /home/hadoop/.versions/flink-*
 
    | 配置项      | 说明                                                         |
    | ----------- | ------------------------------------------------------------ |
-   | Flink Name  | 必填，Flink 环境名称，例如 `flink-1.20.5`，创建作业时按该名称选择 |
-   | Flink Home  | 必填，`FLINK_HOME` 的绝对路径，例如 `/home/hadoop/.versions/flink-1.20.5` |
+   | Flink Name  | 必填，Flink 环境名称，例如 `flink-1.18.1`，创建作业时按该名称选择 |
+   | Flink Home  | 必填，`FLINK_HOME` 的绝对路径，例如 `/home/hadoop/flink` |
    | Description | 选填，环境描述                                               |
 
    填写示例如下：

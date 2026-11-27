@@ -59,10 +59,6 @@ StreamPark 的配置在 `/home/hadoop/streampark/conf/config.yaml` 中，修改�
 
 ## 5. 添加 Flink 环境
 
-StreamPark 提交作业时使用的 Flink 由 **Flink Home**（Flink 环境）指定。集群创建时同时部署了 Flink 的，Flink 环境会自动注册到 StreamPark；但如果集群创建时没有部署 Flink，之后才在集群中新增 Flink 服务，StreamPark 不会自动感知新安装的 Flink，需要按本章步骤手动添加后才能提交作业。
-
-适用场景：集群创建时未安装 Flink，后续通过新增服务安装了 Flink（或新增了另一个 Flink 版本）。
-
 前提条件：
 
 * 集群中的 Flink 服务已安装完成。

@@ -45,9 +45,73 @@ service StreamParkServer status
 
 说明：请使用 `hadoop` 用户执行以上命令。
 
-## 4. 提交 Flink 作业
+## 4. 常用配置
 
-### 4.1 登录控制台
+StreamPark 的配置在 `/home/hadoop/streampark/conf/config.yaml` 中，修改后需重启服务生效，常用配置如下：
+
+| 配置项                        | 说明                                                         |
+| ----------------------------- | ------------------------------------------------------------ |
+| `server.port`                 | Web 服务端口，默认 11000                                     |
+| `server.session.ttl`          | 登录会话有效期，默认 2h，超时需重新登录                      |
+| `streampark.workspace.local`  | 本地工作空间，不可设置在 StreamPark 安装目录下               |
+| `streampark.workspace.remote` | HDFS 工作空间                                                |
+| `streampark.hadoop-user-name` | 提交作业到 Yarn 使用的用户，默认 `hadoop`                    |
+
+## 5. 添加 Flink 环境
+
+前提条件：
+
+* 集群中的 Flink 服务已安装完成。
+* Flink 安装目录必须与 StreamPark 服务位于同一台服务器，即 StreamPark 所在的 master1 节点。
+* Flink 版本不低于 1.12。
+
+### 5.1 确认 Flink 安装目录
+
+在 master1 节点使用 `hadoop` 用户确认 Flink 已安装。UHadoop 将 Flink 安装在 `/home/hadoop/flink`目录：
+
+```
+ls -d /home/hadoop/flink
+/home/hadoop/flink/bin/flink -v
+```
+
+说明：
+
+* `<version>` 为 Flink 版本号，例如 `1.18.1`、`1.20.5`。
+* master1 上没有该目录时，说明 Flink 未部署到 StreamPark 所在节点，需要先在在控制台安装Flink组件或自行部署 Flink。
+
+### 5.2 在 StreamPark 中添加
+
+1. 登录控制台，在左侧菜单依次选择 **Settings**（设置中心）> **Flink Home**，页面列表展示已有的 Flink 环境，包括名称（Flink Name）、路径（Flink Home）、版本（Flink Version）、是否默认（Default）和描述（Description）。
+
+   ![](/images/streampark_flink_home_list.png)
+
+2. 点击右上角 **Add New**（添加），在弹出的对话框中填写：
+
+   | 配置项      | 说明                                                         |
+   | ----------- | ------------------------------------------------------------ |
+   | Flink Name  | 必填，Flink 环境名称，例如 `flink-1.18.1`，创建作业时按该名称选择 |
+   | Flink Home  | 必填，`FLINK_HOME` 的绝对路径，例如 `/home/hadoop/flink` |
+   | Description | 选填，环境描述                                               |
+
+   填写示例如下：
+
+   ![](/images/streampark_flink_home_add_filled.png)
+
+3. 点击 **OK**（确定）保存。保存后列表中出现新的 Flink 环境，Flink Version 列展示该环境对应的 Flink 版本。
+
+### 5.3 使用与默认版本
+
+* 创建作业时，在 **Flink Version** 中选择已添加的 Flink 环境，详见 6.2。
+* 列表中 **Default** 开关打开的版本为默认版本。
+* 已有作业正在使用的 Flink 环境，请勿删除安装目录或修改路径，否则作业可能无法正常启动。
+
+说明：
+
+* 官方文档参考：[Apache StreamPark Quick Start](https://streampark.apache.org/docs/get-started/quick-start)，其中要求 Flink 安装包与 StreamPark 服务在同一台服务器。
+
+## 6. 提交 Flink 作业
+
+### 6.1 登录控制台
 
 StreamPark 运行在 master1 节点，访问 `http://uhadoop-xxxxxxx-master1:11000`，使用 `admin` 用户登录，密码为集群密码。
 
@@ -55,7 +119,7 @@ StreamPark 运行在 master1 节点，访问 `http://uhadoop-xxxxxxx-master1:110
 
 ![](/images/streampark_app_list.png)
 
-### 4.2 创建作业
+### 6.2 创建作业
 
 在应用列表右上角点击 **Add New**（添加），进入作业创建页面。下面按 Job Type（作业类型）分别介绍两种场景。
 
@@ -72,7 +136,7 @@ StreamPark 运行在 master1 节点，访问 `http://uhadoop-xxxxxxx-master1:110
   Checkpoint 默认保存在 `hdfs://Ucluster/flink/flink-checkpoints/<jobId>/chk-<n>`，无需额外配置目录。
 
 
-#### 4.2.1 Flink SQL 作业
+#### 6.2.1 Flink SQL 作业
 
 1. **Job Type** 选择 **Flink SQL**。
 2. 选择 Deploy Mode 和 Flink Version。
@@ -90,7 +154,7 @@ StreamPark 运行在 master1 节点，访问 `http://uhadoop-xxxxxxx-master1:110
 
 ![](/images/streampark_app_add_filled.png)
 
-#### 4.2.2 Custom Code 作业
+#### 6.2.2 Custom Code 作业
 
 Custom Code 用于提交已经开发好的 Flink JAR 包。
 
@@ -112,7 +176,7 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
 * 作业创建成功后，状态为 `ADDED`，发布状态为 `WAITING`。之后的发布、启动、停止操作与 Flink SQL 作业相同。
 * WordCount 示例是有界作业，启动后运行数秒即正常结束，状态为 `FINISHED`，不会一直处于 `RUNNING`。
 
-### 4.3 发布作业
+### 6.3 发布作业
 
 新创建的作业需要先发布，才能启动。
 
@@ -124,7 +188,7 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
 
 说明：作业被编辑（Edit）并保存后，发布状态会重新变为 `WAITING`，需要再次发布后才能启动。
 
-### 4.4 启动作业
+### 6.4 启动作业
 
 * 点击作业所在行的 **Start Job**（启动，播放图标），弹出启动对话框。
 
@@ -149,10 +213,10 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
 
 * 作业启动后，可在 Flink Web UI 的 Checkpoints 页面查看恢复信息。
 * 如需全新启动、不恢复状态，请将 **Start job from savepoint** 开关关闭后再点击 **Apply**。
-* 要让作业产生可恢复的 Checkpoint，需要在创建作业时开启 Checkpoint 并设置取消后保留，详见 4.2。
+* 要让作业产生可恢复的 Checkpoint，需要在创建作业时开启 Checkpoint 并设置取消后保留，详见 6.2。
 * Savepoint 和 Checkpoint 也可以手动获取，参考[Flink FAQs](/uhadoop/user/flink)。
 
-### 4.5 查看作业
+### 6.5 查看作业
 
 点击应用列表中的作业名称，进入作业详情页，可查看作业基本信息（Job Info）、操作记录（Operation Log）、作业选项（Option）和 Flink SQL。
 
@@ -161,7 +225,7 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
 * 作业运行中时，点击右上角的 **Flink Web UI** 可跳转到该作业的 Flink 页面。
 * 操作记录中的 Cluster Id 即作业在 Yarn 上对应的 Application ID，也可通过 Yarn WebUI 查看，访问方式参考[UHadoop服务WebUI接入指南](/uhadoop/developer/webui)。
 
-### 4.6 停止作业
+### 6.6 停止作业
 
 * 点击作业所在行的 **Stop Job**（停止）图标，弹出停止对话框。
 
@@ -177,15 +241,3 @@ Custom Code 用于提交已经开发好的 Flink JAR 包。
   | --------------- | ------------------------------------------------------------ |
   | Savepoint path  | 选填，Savepoint 保存在默认路径 `hdfs://Ucluster/streampark/savepoints/` 下，形如 `savepoint-xxxxxx-xxxxxxxxxxxx` |
   | Drain           | 开启后，在触发 Savepoint 并停止作业前，先发送 `MAX_WATERMARK`，使窗口等算子输出剩余数据 |
-
-## 5. 常用配置
-
-StreamPark 的配置在 `/home/hadoop/streampark/conf/config.yaml` 中，修改后需重启服务生效，常用配置如下：
-
-| 配置项                        | 说明                                                         |
-| ----------------------------- | ------------------------------------------------------------ |
-| `server.port`                 | Web 服务端口，默认 11000                                     |
-| `server.session.ttl`          | 登录会话有效期，默认 2h，超时需重新登录                      |
-| `streampark.workspace.local`  | 本地工作空间，不可设置在 StreamPark 安装目录下               |
-| `streampark.workspace.remote` | HDFS 工作空间                                                |
-| `streampark.hadoop-user-name` | 提交作业到 Yarn 使用的用户，默认 `hadoop`                    |
